@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Belajar TK Android</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #222;
+            text-align: center;
+            padding-bottom: 75px; /* Ruang untuk menu bawah */
+        }
+
+        /* Header Ringkas */
+        header {
+            background-color: #ff6b6b;
+            color: #fff;
+            padding: 12px 10px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* Kontainer Halaman */
+        .page {
+            display: none;
+            padding: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .sub-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 10px;
+            background: #ffe66d;
+            padding: 6px 12px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        /* Grid Khusus Layar HP */
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+
+        .rtl {
+            direction: rtl;
+        }
+
+        /* Tombol Kartu Ringan */
+        .card {
+            color: #fff;
+            border-radius: 12px;
+            padding: 12px 4px;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s;
+        }
+
+        .card:active, .card.active-tap {
+            transform: scale(0.92);
+            opacity: 0.85;
+        }
+
+        .huruf-besar {
+            font-size: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .angka-besar {
+            font-size: 1.25rem;
+            padding: 10px 2px;
+        }
+
+        .arab-besar {
+            font-size: 1.8rem;
+            line-height: 1.2;
+        }
+
+        .label-kecil {
+            font-size: 0.7rem;
+            font-weight: 500;
+            margin-top: 3px;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 1px 6px;
+            border-radius: 6px;
+            direction: ltr;
+        }
+
+        /* Warna Cerah Flat (Ringan di GPU HP) */
+        .c1 { background-color: #ff6b6b; }
+        .c2 { background-color: #1dd1a1; }
+        .c3 { background-color: #54a0ff; }
+        .c4 { background-color: #ff9f43; }
+        .c5 { background-color: #5f27cd; }
+
+        /* Navigasi Bawah Khas Aplikasi Android */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #ffffff;
+            display: flex;
+            border-top: 1px solid #ddd;
+            height: 60px;
+            z-index: 20;
+        }
+
+        .nav-item {
+            flex: 1;
+            border: none;
+            background: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #777;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .nav-item span {
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: #ff6b6b;
+            background-color: #fff5f5;
+            border-top: 3px solid #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 id="judul-header">🔤 Belajar Huruf A - Z</h1>
+    </header>
+
+    <!-- HALAMAN 1: ABCD -->
+    <div id="page-abc" class="page active">
+        <div class="sub-title">Sentuh huruf untuk mendengar suara</div>
+        <div class="grid-4" id="list-abc"></div>
+    </div>
+
+    <!-- HALAMAN 2: ANGKA 1-100 -->
+    <div id="page-angka" class="page">
+        <div class="sub-title">Sentuh angka untuk berhitung</div>
+        <div class="grid-5" id="list-angka"></div>
+    </div>
+
+    <!-- HALAMAN 3: HIJAIYAH -->
+    <div id="page-hijaiyah" class="page">
+        <div class="sub-title">Sentuh huruf Hijaiyah</div>
+        <div class="grid-4 rtl" id="list-hijaiyah"></div>
+    </div>
+
+    <!-- NAVIGASI BAWAH -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="gantiTab('page-abc', '🔤 Belajar Huruf A - Z', this)">
+            <span>🔤</span>ABCD
+        </button>
+        <button class="nav-item" onclick="gantiTab('page-angka', '🔢 Berhitung 1 - 100', this)">
+            <span>🔢</span>1 - 100
+        </button>
+        <button class="nav-item" onclick="gantiTab('page-hijaiyah', '🕌 Huruf Hijaiyah', this)">
+            <span>🕌</span>Hijaiyah
+        </button>
+    </nav>
+
+    <script>
+        const warna = ['c1', 'c2', 'c3', 'c4', 'c5'];
+        const synth = window.speechSynthesis;
+
+        // Fungsi Ganti Tab
+        function gantiTab(idHalaman, judulBaru, btn) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(idHalaman).classList.add('active');
+            document.getElementById('judul-header').textContent = judulBaru;
+            btn.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Fungsi Suara Optimal Android
+        function bunyi(teks, el) {
+            if (synth.speaking) {
+                synth.cancel();
+            }
+
+            el.classList.add('active-tap');
+            setTimeout(() => el.classList.remove('active-tap'), 150);
+
+            const suara = new SpeechSynthesisUtterance(teks);
+            suara.lang = 'id-ID';
+            suara.rate = 0.9;
+            suara.pitch = 1.1;
+            synth.speak(suara);
+        }
+
+        // 1. Isi Huruf ABCD
+        const dataAbc = [
+            ['A a','A'],['B b','Be'],['C c','Ce'],['D d','De'],
+            ['E e','E'],['F f','Ef'],['G g','Ge'],['H h','Ha'],
+            ['I i','I'],['J j','Je'],['K k','Ka'],['L l','El'],
+            ['M m','Em'],['N n','En'],['O o','O'],['P p','Pe'],
+            ['Q q','Ki'],['R r','Er'],['S s','Es'],['T t','Te'],
+            ['U u','U'],['V v','Ve'],['W w','We'],['X x','Eks'],
+            ['Y y','Ye'],['Z z','Zet']
+        ];
+        const boxAbc = document.getElementById('list-abc');
+        dataAbc.forEach((item, i) => {
+            const d = document.createElement('div');
+            d.className = `card ${warna[i % 5]}`;
+            d.innerHTML = `<div class="huruf-besar">${item[0]}</div><div class="label-kecil">${item[1]}</div>`;
+            d.onclick = () => bunyi(item[1], d);
+            boxAbc.appendChild(d);
+        });
+
+        // 2. Isi Angka 1 - 100
+        const boxAngka = document.getElementById('list-angka');
+        for (let i = 1; i <= 100; i++) {
+            const d = document.createElement('div');
+            d.className = `card angka-besar ${warna[(i - 1) % 5]}`;
+            d.textContent = i;
+            d.onclick = () => bunyi(i.toString(), d);
+            boxAngka.appendChild(d);
+        }
+
+        // 3. Isi Hijaiyah
+        const dataHijaiyah = [
+            ['ا','Alif'],['ب','Ba'],['ت','Ta'],['ث','Tsa'],
+            ['ج','Jim'],['ح','Ha'],['خ','Kho'],['د','Dal'],
+            ['ذ','Dzal'],['ر','Ro'],['ز','Zai'],['س','Sin'],
+            ['ش','Syin'],['ص','Shod'],['ض','Dhod'],['ط','Tho'],
+            ['ظ','Zho'],['ع','Ain'],['غ','Ghoin'],['ف','Fa'],
+            ['ق','Qof'],['ك','Kaf'],['ل','Lam'],['م','Mim'],
+            ['ن','Nun'],['و','Wawu'],['هـ','Ha'],['لا','Lam Alif'],
+            ['ء','Hamzah'],['ي','Ya']
+        ];
+        const boxHijaiyah = document.getElementById('list-hijaiyah');
+        dataHijaiyah.forEach((item, i) => {
+            const d = document.createElement('div');
+            d.className = `card ${warna[i % 5]}`;
+            d.innerHTML = `<div class="arab-besar">${item[0]}</div><div class="label-kecil">${item[1]}</div>`;
+            d.onclick = () => bunyi(item[1], d);
+            boxHijaiyah.appendChild(d);
+        });
+    </script>
+</body>
+</html>
